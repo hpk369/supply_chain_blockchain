@@ -1,0 +1,11 @@
+[
+    {
+        "index": 0,
+        "timestamp": "Wed Jun  4 11:55:53 2025",
+        "data": {
+            "message": "Genesis Block"
+        },
+        "previous_hash": "0",
+        "hash": "b0cf703c6a03213910ef7b4815eeba259913f7d4dafef598962d6f3e0d500c8c"
+    }
+]
