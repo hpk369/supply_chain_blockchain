@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    h1 { color: #333; }
+    fieldset { margin-bottom: 1.5em; }
+    label { display: block; margin: 0.5em 0 0.2em; }
+    input[type="text"], textarea { width: 100%; padding: 0.5em; }
+    button { padding: 0.5em 1em; margin-top: 0.5em; }
+    .logout { float: right; }
+    #response { margin-top: 1em; white-space: pre-wrap; background: #f9f9f9; padding: 1em; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+
+  <a href="{{ url_for('auth.logout') }}" class="logout">Logout</a>
+  <h1>Welcome, {{ username }}</h1>
+
+  <fieldset>
+    <legend>Create a New Batch</legend>
+    <label for="create_batch_id">Batch ID:</label>
+    <input type="text" id="create_batch_id" placeholder="e.g. BATCH-001" />
+
+    <label for="create_details">Details (JSON):</label>
+    <textarea id="create_details" rows="3" placeholder='{"Weight": "10kg", "contents": "Widgets"}'></textarea>
+
+    <button onClick="createBatch()">Create Batch</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Transfer a Batch</legend>
+    <label for="transfer_batch_id">Batch ID:</label>
+    <input type="text" id="transfer_batch_id" placeholder="e.g. BATCH-001" />
+
+    <label for="transfer_to">Transfer To (username):</label>
+    <input type="text" id="transfer_to" placeholder="e.g. userB" />
+
+    <button onClick="transferBatch()">Transfer Batch</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>View Batch History</legend>
+    <label for="history_batch_id">Batch ID:</label>
+    <input type="text" id="history_batch_id" placeholder="e.g. BATCH-001" />
+
+    <button onClick="viewHistory()">View History</button>
+  </fieldset>
+
+  <div id="response"></div>
+
+  <script>
+
+    const respondDiv = document.getElementById("response")
+
+    // We send JSON wiht the fetch; Flask-Login handles session cookies automatically.
+    function createBatch() {
+      const batchId = document.getElementById("create_batch_id").value;
+      let details = {};
+      try {
+        const raw = document.getElementById("create_details").value;
+        details = raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        responseDiv.textContent = "Invalid JSON in Details field.";
+        return;
+      }
+      fetch("{{ url_for('user.create_batch') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ batch_id: batchId, details: details })
+      })
+      .then(res => res.json().then(data => ({ status: res.status, body: data })))
+      .then(obj => {
+        respondDiv.textContent = JSON.stringify(obj, null, 2);
+      })
+      .catch(err => {
+        responseDiv.textContent = err;
+      });
+    }
+
+    function transferBatch() {
+      const batchId = document.getElementById("transfer_batch_id").value;
+      const toUser = document.getElementById("transfer_to").value;
+      fetch("{{ url_for('user.transfer_batch') }}", {
+        method: "POST",
+        header: { "Content-Type": "application/json" },
+        body: JSON.stringify({ batch_id: batchId, to: toUser })
+      })
+      .then(res => res.json().then(data => ({ status: res.status, body: data })))
+      .then(obj => {
+        responseDiv.textContent = JSON.stringify(obj, null, 2);
+      })
+      .catch(err => {
+        responseDiv.textContent = err;
+      });
+    }
+
+    function viewHistory() {
+      const batchId = document.getElementById("history_batch_id").value;
+      fetch(`{{ url_for('user.batch_history', batch_id='') }}/${batchId}`, {
+        method: "GET",
+      })
+      .then(res => res.json().then(data => ({ status: res.status, body: data })))
+      .then(obj => {
+        responseDiv.textContent = JSON.stringify(obj, null, 2);
+      })
+      .catch(err => {
+        respondDiv.textContent = err;
+      });
+    }
+
+  </script>
+
+</body>
+</html>

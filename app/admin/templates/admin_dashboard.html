@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2em; }
+      h1 { color: #333; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+      th, td { border: 1px solid #ccc; padding: 0.5em; text-align: center; }
+      th { background: #f4f4f4; }
+      input[type="text"], input[type="number"] { width:100%; padding: 0.3em; margin-bottom: 0.5em; }
+      button { padding: 0.5em 1em; }
+      a { text-decoration: none; color: #0066cc; }
+      .done { color: green; }
+      .pending { color: red; }
+      .logout { float: right; }
+    </style>
+  </head>
+  <body>
+
+    <a href="{{ url_for('auth.logout') }}" class="logout">logout</a>
+    <h1>Welcome, Admin {{ username }}</h1>
+
+    <!-- Link to view the blockchain in new tab -->
+     <p>
+      <a href="{{ url_for('admin.view_chain') }}" target="_blank">View Full Blockchain (JSON)</a>
+     </p>
+
+     <hr />
+
+     <h2>Exisiting Concerns</h2>
+     {% if concerns %}
+      <table>
+        <thread>
+          <tr>
+            <th>ID</th>
+            <th>Block Index</th>
+            <th>Issue</th>
+            <th>Raised By</th>
+            <th>Raised At</th>
+            <th>Status</th>
+            <th>Resolve</th>
+          </tr>
+        </thread>
+        <tbody>
+          {% for c in concerns %}
+          <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.block_index }}</td>
+            <td>{{ c.issue }}</td>
+            <td>{{ c.raised_by }}</td>
+            <td>{{ c.raised_at }}</td>
+            <td>
+              {% if c.resolved %}
+                <span class="done">Resolved at {{ c.resolved_at }}</span>
+              {% else %}
+                <span class="pending">pending</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if not in c.resolved %}
+                <form action="{{ url_for('admin.resolve_concern', concern_id=c.id) }}" method="POST" style="margin:0">
+                  <input type="hidden" name="_method" value="Delete" />
+                  <button type="submit">Mark Resolved</button>
+                </form>
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No concerns raised yet.</p>
+    {% endif %}
+
+    <hr />
+
+    <h2> Raise a New Concern</h2>
+    <form action="{{ url_for('admin.raise_concern') }}" method="POST">
+      <label for="block_index">Block Index:</label><br />
+      <input type="number" name="block_index" id="block_index" required /><br />
+
+      <label for="issue">Issue Description:</label><br />
+      <input type="text" name="issue" id="issue" required /><br />
+
+      <button type="submit">Submit Concern</button>
+    </form>
+    
+  </body>
+</html>

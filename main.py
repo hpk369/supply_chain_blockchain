@@ -1,6 +1,7 @@
-from blockchain.blockchain import Blockchain
+from app import create_app
+
+app = create_app()
 
 if __name__ == "__main__":
-  
-  bc = Blockchain()
-  bc.print_chain()
+  # debug-True for local development; remove in production
+  app.run(host="0.0.0.0", port=5000, debug=True)

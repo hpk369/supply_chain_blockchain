@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html land="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2em;}
+      h1 { color: #333; }
+      form { max-width: 300px; margin-top: 1em;}
+      label { display: block; margin: 0.5em 0 0.2em; }
+      input { width: 100%; padding: 0.5em; margin-bottom: 0.7em; }
+      button { padding: 0.5em 1em; }
+      .flash { color: red; margin-bottom: 1em; }
+    </style>
+  </head>
+  <body>
+
+    <h1>Please Log In</h1>
+
+    {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+      {% if messages %}
+        <div class="flash">
+          {% for msg in messages %}
+            <p>{{ msg }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% end with %}
+
+    <form action="{{ url_for('auth.login') }}" method="POST">
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" required />
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required />
+      
+      <button type="submit">Log In</button>
+    </form>
+
+  </body>
+</html>
