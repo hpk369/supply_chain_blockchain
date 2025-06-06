@@ -81,7 +81,7 @@ def transfer_batch():
 
   return jsonify({"message": "Batch transferred", "block_index": BC.chain[-1].index}), 201
 
-@user_bp.route("/history/<string:batch_id", methods=["GET"])
+@user_bp.route("/history/<string:batch_id>", methods=["GET"])
 @login_required
 @roles_required("user")
 def batch_history(batch_id):
