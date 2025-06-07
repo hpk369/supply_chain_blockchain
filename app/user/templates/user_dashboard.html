@@ -53,7 +53,10 @@
 
   <script>
 
-    const respondDiv = document.getElementById("response")
+    const respondDiv = document.getElementById("response");
+    const createUrl = "{{ url_for('user.create_batch') }}";
+    const transferUrl = "{{ url_for('user.transfer_batch') }}";
+    const historyUrlTemplate = "{{ url_for('user.batch_history', batch_id='__ID__') }}";
 
     // We send JSON wiht the fetch; Flask-Login handles session cookies automatically.
     function createBatch() {
@@ -99,18 +102,13 @@
 
     function viewHistory() {
       const batchId = document.getElementById("history_batch_id").value;
-      fetch(`{{ url_for('user.batch_history', batch_id='') }}/${batchId}`, {
-        method: "GET",
-      })
+      // Replace the placeholder in the URL with the actual batch ID
+      const url = historyUrlTemplate.replace("__ID__", batchId);
+      fetch(url, { method: "GET" })
       .then(res => res.json().then(data => ({ status: res.status, body: data })))
-      .then(obj => {
-        responseDiv.textContent = JSON.stringify(obj, null, 2);
-      })
-      .catch(err => {
-        respondDiv.textContent = err;
-      });
+      .then(obj => { responseDiv.textContent = JSON.stringify(obj, null, 2); })
+      .catch(err => { responseDiv.textContent = err; });
     }
-
   </script>
 
 </body>

@@ -1,11 +1,26 @@
 [
     {
         "index": 0,
-        "timestamp": "Wed Jun  4 11:55:53 2025",
+        "timestamp": "Sat Jun  7 10:50:49 2025",
         "data": {
             "message": "Genesis Block"
         },
         "previous_hash": "0",
-        "hash": "b0cf703c6a03213910ef7b4815eeba259913f7d4dafef598962d6f3e0d500c8c"
+        "hash": "5e5a578cb49a5b759fd80ed2cefcf622501a608f73b3087b72efff0b3d04c217"
+    },
+    {
+        "index": 1,
+        "timestamp": "Sat Jun  7 10:50:49 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Created batch B-TEST",
+            "batch_id": "B-TEST",
+            "details": {
+                "info": "test"
+            },
+            "timestamp": "Sat Jun  7 10:50:49 2025"
+        },
+        "previous_hash": "5e5a578cb49a5b759fd80ed2cefcf622501a608f73b3087b72efff0b3d04c217",
+        "hash": "f784cd7c7cdbb9fc4d011e262cc53bd44249dbf7da947664e1483e87d3ad9b0f"
     }
 ]

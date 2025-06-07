@@ -8,7 +8,7 @@ from flask_login import login_required, current_user
 from ..utils import roles_required
 from blockchain.blockchain import Blockchain
 
-admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
+admin_bp = Blueprint("admin", __name__, url_prefix="/admin", template_folder="templates")
 
 LEDGER_PATH = Path("data/ledger.json")
 CONCERNS_PATH = Path("data/concerns.json")
@@ -27,7 +27,7 @@ def load_concerns():
   
 def save_concerns(concerns_list):
   # Persist the list of concerns to data/concerns.json
-  CONCERNS_PATH.write_text(json.dumps(concerns_list, idnent=4))
+  CONCERNS_PATH.write_text(json.dumps(concerns_list, indent=4))
 
 @admin_bp.route("/dashboard")
 @login_required
@@ -38,6 +38,7 @@ def admin_dashboard():
   - View full chain
   - View/raise/resolved concerns
   '''
+  print(f"DEBUG: {current_user.id}, role={current_user.role}")
   concerns = load_concerns()
   return render_template("admin_dashboard.html", username=current_user.id, concerns=concerns)
 
@@ -64,7 +65,7 @@ def view_concerns():
 @admin_bp.route("/concerns", methods=["POST"])
 @login_required
 @roles_required("admin")
-def rasie_concern():
+def raise_concern():
   # Admin posts a new concern. Expects JSON: { "block_index": int, "issue": str }
   payload = request.get_json() or {}
   block_index = payload.get("block_index")
@@ -86,7 +87,7 @@ def rasie_concern():
   save_concerns(concerns)
   return jsonify(new_concern), 201
 
-@admin_bp.route("/concerns/<int:conerns_id>", methods=["DELETE"])
+@admin_bp.route("/concerns/<int:concern_id>", methods=["DELETE"])
 @login_required
 @roles_required("admin")
 def resolve_concern(concern_id):

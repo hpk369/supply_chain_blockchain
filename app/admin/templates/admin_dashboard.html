@@ -44,32 +44,32 @@
           </tr>
         </thread>
         <tbody>
-          {% for c in concerns %}
-          <tr>
-            <td>{{ c.id }}</td>
-            <td>{{ c.block_index }}</td>
-            <td>{{ c.issue }}</td>
-            <td>{{ c.raised_by }}</td>
-            <td>{{ c.raised_at }}</td>
-            <td>
-              {% if c.resolved %}
-                <span class="done">Resolved at {{ c.resolved_at }}</span>
-              {% else %}
-                <span class="pending">pending</span>
-              {% endif %}
-            </td>
-            <td>
-              {% if not in c.resolved %}
-                <form action="{{ url_for('admin.resolve_concern', concern_id=c.id) }}" method="POST" style="margin:0">
-                  <input type="hidden" name="_method" value="Delete" />
-                  <button type="submit">Mark Resolved</button>
-                </form>
-              {% else %}
-                -
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
+          {% for concern in concerns %}
+            <tr>
+              <td>{{ concern.id }}</td>
+              <td>{{ concern.block_index }}</td>
+              <td>{{ concern.issue }}</td>
+              <td>{{ concern.raised_by }}</td>
+              <td>{{ concern.raised_at }}</td>
+              <td>
+                {% if concern.resolved %}
+                  <span class="done">Resolved at {{ concern.resolved_at }}</span>
+                {% else %}
+                  <span class="pending">Pending</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if not concern.resolved %}
+                  <form action="{{ url_for('admin.resolve_concern', concern_id=concern.id) }}"
+                        method="POST" style="margin:0">
+                    <button type="submit">Mark Resolved</button>
+                  </form>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
         </tbody>
       </table>
     {% else %}

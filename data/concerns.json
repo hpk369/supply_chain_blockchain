@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1749306832784,
+        "block_index": 0,
+        "issue": "Test issue on genesis",
+        "raised_by": "admin1",
+        "raised_at": "Sat Jun  7 10:33:52 2025",
+        "resolved": false
+    },
+    {
+        "id": 1749307849487,
+        "block_index": 0,
+        "issue": "Test issue on genesis",
+        "raised_by": "admin1",
+        "raised_at": "Sat Jun  7 10:50:49 2025",
+        "resolved": false
+    }
+]

@@ -6,10 +6,7 @@ from flask_login import login_required, current_user
 from ..utils import roles_required
 from blockchain.blockchain import Blockchain
 
-user_bp = Blueprint("user", __name__, url_prefix="/user")
-
-# Reuse the same Blockchain instance from admin (so they share ledger.json)
-BC = Blockchain()
+user_bp = Blueprint("user", __name__, url_prefix="/user", template_folder="templates")
 
 @user_bp.route("/dashboard")
 @login_required
@@ -21,6 +18,7 @@ def user_dashboard():
   - Form to transfer a batch
   - Form to view history of a batch
   '''
+  print(f"DEBUG: {current_user.id}, role={current_user.role}")
   return render_template("user_dashboard.html", username=current_user.id)
 
 @user_bp.route("/create", methods=["POST"])
@@ -38,17 +36,22 @@ def create_batch():
       "timestamp": time.ctime()
     }
   '''
+
+  BC = Blockchain()
+  # bc.add_block(new_data)
+  # return jsonify({ "block_index": bc.chain[-1].index }), 201
+
   payload = request.get_json() or {}
   batch_id = payload.get("batch_id","").strip()
   details = payload.get("details", {})
 
   if not batch_id:
-    return abort(400, "batch_id is required")
+    abort(400, "batch_id is required")
   
   new_data = {
     "actor": current_user.id,
     "action": f"Created batch {batch_id}",
-    "bactch_id": batch_id,
+    "batch_id": batch_id,
     "details": details,
     "timestamp": time.ctime()
   }
@@ -64,6 +67,8 @@ def transfer_batch():
   Accept JSON: { "batch_id": str, "to": str }
   Adds a new block recording the transfer
   '''
+  BC = Blockchain()
+
   payload = request.get_json() or {}
   batch_id = payload.get("batch_id", "").strip()
   to_actor = payload.get("to", "").strip()
@@ -88,10 +93,13 @@ def batch_history(batch_id):
   '''
   Returns the histiry (all blocks) for a given batch_id
   '''
-  chain = BC.chain  # List[Block]
-  matches = [blk.to_dict() for blk in chain if blk.data.get("batch_id") == batch_id]
-
-  if not matches:
-    return jsonify({"message": f"No history found for batch {batch_id}"}), 404
-  
-  return jsonify(matches), 200
+  BC = Blockchain()
+  history = [
+    blk.to_dict()
+    for blk in BC.chain
+    if blk.data.get("batch_id") == batch_id
+  ]
+  print("DEBUG CHAIN DATA:", [blk.data for blk in BC.chain])
+  if not history:
+    return jsonify({"message": f"No history foudn for batch {batch_id}"}), 404
+  return jsonify(history), 200

@@ -21,6 +21,7 @@ def login():
   if request.method == "POST":
     username = request.form.get("username")
     password = request.form.get("password")
+    print(f"DEBUG: Received login attempt for -> username: {username!r}, password: {password!r}")
 
     if User.validate_credentials(username, password):
       user = User.get(username)
