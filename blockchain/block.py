@@ -3,11 +3,12 @@ import json
 from typing import Any, Dict
 
 class Block:
-  def __init__(self, index: int, timestamp: str, data: Dict[str, Any], previous_hash: str):
+  def __init__(self, index: int, timestamp: str, data: Dict[str, Any], previous_hash: str, status: str = "confirmed"):
     self.index = index
     self.timestamp = timestamp
     self.data = data
     self.previous_hash = previous_hash
+    self.status = status # "pending", "confirmed", or "denied"
     self.hash = self.calculate_hash()
 
   def calculate_hash(self) -> str:
@@ -21,7 +22,8 @@ class Block:
       "index": self.index,
       "timestamp": self.timestamp,
       "data": self.data,
-      "previous_hash": self.previous_hash
+      "previous_hash": self.previous_hash,
+      "status": self.status
     }
     block_string = json.dumps(block_content, sort_keys=True).encode()
     return hashlib.sha256(block_string).hexdigest()
@@ -33,5 +35,6 @@ class Block:
       "timestamp": self.timestamp,
       "data": self.data,
       "previous_hash": self.previous_hash,
+      "status": self.status,
       "hash": self.hash
     }

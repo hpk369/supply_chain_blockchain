@@ -1,251 +1,176 @@
 [
     {
         "index": 0,
-        "timestamp": "Sat Jun  7 10:59:20 2025",
+        "timestamp": "Sun Jun  8 11:01:29 2025",
         "data": {
             "message": "Genesis Block"
         },
         "previous_hash": "0",
-        "hash": "1e65578b014b46f18b06d777ed7cfe79b5c31279be7bf323e56e8e1511495f84"
+        "status": "confirmed",
+        "hash": "f9c56d8c274bd9acb1686a58b0d565f31f09f1fb41f00e72197b5878de239a42"
     },
     {
         "index": 1,
-        "timestamp": "Sat Jun  7 10:59:20 2025",
+        "timestamp": "Sun Jun  8 11:14:02 2025",
         "data": {
             "actor": "userA",
-            "action": "Created batch B-TEST",
-            "batch_id": "B-TEST",
+            "action": "Created batch BATCH-001",
+            "batch_id": "BATCH-001",
             "details": {
-                "info": "test"
+                "desc": "hello"
             },
-            "timestamp": "Sat Jun  7 10:59:20 2025"
+            "timestamp": "Sun Jun  8 11:14:02 2025"
         },
-        "previous_hash": "1e65578b014b46f18b06d777ed7cfe79b5c31279be7bf323e56e8e1511495f84",
-        "hash": "4fc6d413698bb7f599834e1ee2a3de2232783b6c76989642f9d2dcbec1eb9925"
+        "previous_hash": "f9c56d8c274bd9acb1686a58b0d565f31f09f1fb41f00e72197b5878de239a42",
+        "status": "confirmed",
+        "hash": "10717cc2fc043d8feb48bdafa9ea1f0053b0491d66dc83e4af7ac5375003da31"
     },
     {
         "index": 2,
-        "timestamp": "Sat Jun  7 11:20:23 2025",
+        "timestamp": "Sun Jun  8 11:24:12 2025",
         "data": {
-            "actor": "userA",
+            "actor": "UserB",
             "action": "Created batch BATCH-002",
             "batch_id": "BATCH-002",
             "details": {
-                "details": "xyz"
+                "desc": "hi"
             },
-            "timestamp": "Sat Jun  7 11:20:23 2025"
+            "timestamp": "Sun Jun  8 11:24:12 2025"
         },
-        "previous_hash": "4fc6d413698bb7f599834e1ee2a3de2232783b6c76989642f9d2dcbec1eb9925",
-        "hash": "9654f5d6f5cf0ffb2ba57e33380ad5eba8b7922e1cbeb6bb539bacd3e501b75d"
+        "previous_hash": "10717cc2fc043d8feb48bdafa9ea1f0053b0491d66dc83e4af7ac5375003da31",
+        "status": "confirmed",
+        "hash": "31089b3668415aaf024187ed97aac0096e56fea127b58b9e28f8e1f15bb63dee"
     },
     {
         "index": 3,
-        "timestamp": "Sat Jun  7 11:20:24 2025",
+        "timestamp": "Sun Jun  8 11:35:08 2025",
         "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-002",
-            "batch_id": "BATCH-002",
-            "details": {
-                "details": "xyz"
-            },
-            "timestamp": "Sat Jun  7 11:20:24 2025"
+            "actor": "UserB",
+            "action": "Transferred batch BATCH-001 to UserB",
+            "batch_id": "BATCH-001"
         },
-        "previous_hash": "9654f5d6f5cf0ffb2ba57e33380ad5eba8b7922e1cbeb6bb539bacd3e501b75d",
-        "hash": "c4fbbaafbacd78e0abf24769f6cef196a0446d0441fdb454e2a75610659b0aa5"
+        "previous_hash": "31089b3668415aaf024187ed97aac0096e56fea127b58b9e28f8e1f15bb63dee",
+        "status": "confirmed",
+        "hash": "e72addbdaff7ac7ad3c942753134a5503778450cb7952518d268be59a060b406"
     },
     {
         "index": 4,
-        "timestamp": "Sat Jun  7 11:26:06 2025",
+        "timestamp": "Sun Jun  8 11:44:45 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Transferred batch BATCH-002 to userA",
+            "batch_id": "BATCH-002"
+        },
+        "previous_hash": "e72addbdaff7ac7ad3c942753134a5503778450cb7952518d268be59a060b406",
+        "status": "confirmed",
+        "hash": "9ed01ed6fc559ddcc73a1eec2d42de8d0c46a6cea9669345c49f9cb45605641c"
+    },
+    {
+        "index": 5,
+        "timestamp": "Sun Jun  8 11:51:19 2025",
         "data": {
             "actor": "UserB",
             "action": "Created batch BATCH-003",
             "batch_id": "BATCH-003",
             "details": {
-                "details": "hello"
+                "DESC": "HeLLO JI"
             },
-            "timestamp": "Sat Jun  7 11:26:06 2025"
+            "timestamp": "Sun Jun  8 11:51:19 2025"
         },
-        "previous_hash": "c4fbbaafbacd78e0abf24769f6cef196a0446d0441fdb454e2a75610659b0aa5",
-        "hash": "dab14ed52e5f1ebfa67daad73db2370f61d9f0e0608b69d52282a0845da1cbe2"
-    },
-    {
-        "index": 5,
-        "timestamp": "Sat Jun  7 12:19:09 2025",
-        "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-002",
-            "batch_id": "BATCH-002",
-            "details": {
-                "details": "sihgsudig"
-            },
-            "timestamp": "Sat Jun  7 12:19:09 2025"
-        },
-        "previous_hash": "dab14ed52e5f1ebfa67daad73db2370f61d9f0e0608b69d52282a0845da1cbe2",
-        "hash": "49aca8c411a117ad596f8546e0a779c25afcb4b0ea6aa1477cbb6037056eb8c5"
+        "previous_hash": "9ed01ed6fc559ddcc73a1eec2d42de8d0c46a6cea9669345c49f9cb45605641c",
+        "status": "confirmed",
+        "hash": "b0e42113c125aaa05ce1868d5d9f99e1229033d0d04bb0055e5c8e4923277426"
     },
     {
         "index": 6,
-        "timestamp": "Sat Jun  7 18:04:26 2025",
+        "timestamp": "Sun Jun  8 11:51:38 2025",
         "data": {
             "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:04:26 2025"
+            "action": "Transferred batch BATCH-003 to userA",
+            "batch_id": "BATCH-003"
         },
-        "previous_hash": "49aca8c411a117ad596f8546e0a779c25afcb4b0ea6aa1477cbb6037056eb8c5",
-        "hash": "2aaa034feb6ed69fbec9abe4e299d9acec0ffd3f27e5708820ab6a2ac80b43fa"
+        "previous_hash": "b0e42113c125aaa05ce1868d5d9f99e1229033d0d04bb0055e5c8e4923277426",
+        "status": "confirmed",
+        "hash": "45609facb638a6d1d7fcfbeae05b20429757fe7f5c1142ec266c238d4e00ba87"
     },
     {
         "index": 7,
-        "timestamp": "Sat Jun  7 18:17:34 2025",
+        "timestamp": "Sun Jun  8 12:00:10 2025",
         "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
+            "actor": "UserB",
+            "action": "Created batch BATCH-004",
+            "batch_id": "BATCH-004",
             "details": {
-                "data": "isjfhdug"
+                "desc": "final hello"
             },
-            "timestamp": "Sat Jun  7 18:17:34 2025"
+            "timestamp": "Sun Jun  8 12:00:10 2025"
         },
-        "previous_hash": "2aaa034feb6ed69fbec9abe4e299d9acec0ffd3f27e5708820ab6a2ac80b43fa",
-        "hash": "68dda08857dcd6d5c19b4c1ac0df581a266ed75d5f41ca022f3c982480e74704"
+        "previous_hash": "45609facb638a6d1d7fcfbeae05b20429757fe7f5c1142ec266c238d4e00ba87",
+        "status": "confirmed",
+        "hash": "48da6e29cc92b12503d1820f1fce4d0868dbd14353686566fea72e7831312b9f"
     },
     {
         "index": 8,
-        "timestamp": "Sat Jun  7 18:17:35 2025",
+        "timestamp": "Sun Jun  8 12:00:20 2025",
         "data": {
             "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:35 2025"
+            "action": "Transferred batch BATCH-004 to userA",
+            "batch_id": "BATCH-004"
         },
-        "previous_hash": "68dda08857dcd6d5c19b4c1ac0df581a266ed75d5f41ca022f3c982480e74704",
-        "hash": "533af16ae41f767f6c84f3e98a2ed178a2697189ddcc198420e5256d142295fb"
+        "previous_hash": "48da6e29cc92b12503d1820f1fce4d0868dbd14353686566fea72e7831312b9f",
+        "status": "confirmed",
+        "hash": "3beabf8128e144307029dc5bf57889a8819b130b2954ccde7033a5824c45b457"
     },
     {
         "index": 9,
-        "timestamp": "Sat Jun  7 18:17:36 2025",
+        "timestamp": "Sun Jun  8 12:09:50 2025",
         "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
+            "actor": "UserB",
+            "action": "Created batch BATCH-006",
+            "batch_id": "BATCH-006",
             "details": {
-                "data": "isjfhdug"
+                "jsfjs": "jfaf"
             },
-            "timestamp": "Sat Jun  7 18:17:36 2025"
+            "timestamp": "Sun Jun  8 12:09:50 2025"
         },
-        "previous_hash": "533af16ae41f767f6c84f3e98a2ed178a2697189ddcc198420e5256d142295fb",
-        "hash": "d77ef47e5aaac057ddcb316c7b70728127776d0c663562288377dc2035319f38"
+        "previous_hash": "3beabf8128e144307029dc5bf57889a8819b130b2954ccde7033a5824c45b457",
+        "status": "confirmed",
+        "hash": "b729b04d67d1506ac938d88282ae5ab767e9420e6dbef08181b9f68e0b1921f3"
     },
     {
         "index": 10,
-        "timestamp": "Sat Jun  7 18:17:36 2025",
+        "timestamp": "Sun Jun  8 12:09:59 2025",
         "data": {
             "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:36 2025"
+            "action": "Transferred batch BATCH-006 to userA",
+            "batch_id": "BATCH-006"
         },
-        "previous_hash": "d77ef47e5aaac057ddcb316c7b70728127776d0c663562288377dc2035319f38",
-        "hash": "8edf736ecb7c3112fa6aa38897b3aa50755c2ecf9e5cc73507bda91e71e9668b"
+        "previous_hash": "b729b04d67d1506ac938d88282ae5ab767e9420e6dbef08181b9f68e0b1921f3",
+        "status": "confirmed",
+        "hash": "db055cfc8ba86be1048c4d6be6fa18d3da1c48d44c99ef89cba42b2f2458d0bd"
     },
     {
         "index": 11,
-        "timestamp": "Sat Jun  7 18:17:36 2025",
+        "timestamp": "Sun Jun  8 12:25:29 2025",
         "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:36 2025"
+            "actor": "UserB",
+            "action": "Transferred batch BATCH-002 to UserB",
+            "batch_id": "BATCH-002"
         },
-        "previous_hash": "8edf736ecb7c3112fa6aa38897b3aa50755c2ecf9e5cc73507bda91e71e9668b",
-        "hash": "c521dfabb2a55b2bb9cb8788c0725aa70b4e8b53b151d0fc647a510b35112ae3"
+        "previous_hash": "db055cfc8ba86be1048c4d6be6fa18d3da1c48d44c99ef89cba42b2f2458d0bd",
+        "status": "denied",
+        "hash": "19f724342facea868282b54989005ec818138e15cb5d6b1b3c32edffd94e51e4"
     },
     {
         "index": 12,
-        "timestamp": "Sat Jun  7 18:17:36 2025",
+        "timestamp": "Sun Jun  8 12:32:33 2025",
         "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:36 2025"
+            "actor": "UserB",
+            "action": "Transferred batch BATCH-003 to UserB",
+            "batch_id": "BATCH-003"
         },
-        "previous_hash": "c521dfabb2a55b2bb9cb8788c0725aa70b4e8b53b151d0fc647a510b35112ae3",
-        "hash": "7668a30c421b0e2f0a835bd58505b26ae0501d92b0356b79823c63bb291e70d0"
-    },
-    {
-        "index": 13,
-        "timestamp": "Sat Jun  7 18:17:36 2025",
-        "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:36 2025"
-        },
-        "previous_hash": "7668a30c421b0e2f0a835bd58505b26ae0501d92b0356b79823c63bb291e70d0",
-        "hash": "45441c57d46ed0a4000cc807c554cae9e300e99fabc4c85c389e01110de2733d"
-    },
-    {
-        "index": 14,
-        "timestamp": "Sat Jun  7 18:17:37 2025",
-        "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:37 2025"
-        },
-        "previous_hash": "45441c57d46ed0a4000cc807c554cae9e300e99fabc4c85c389e01110de2733d",
-        "hash": "09b3425f1f2d7c0f506b997328ec61a035708be0850fd62588ed661f21036786"
-    },
-    {
-        "index": 15,
-        "timestamp": "Sat Jun  7 18:17:37 2025",
-        "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:37 2025"
-        },
-        "previous_hash": "09b3425f1f2d7c0f506b997328ec61a035708be0850fd62588ed661f21036786",
-        "hash": "505b8c259b5222eba81f51842ab82aa9c82eeeec8dfe2f241aa76a8329155f2b"
-    },
-    {
-        "index": 16,
-        "timestamp": "Sat Jun  7 18:17:37 2025",
-        "data": {
-            "actor": "userA",
-            "action": "Created batch BATCH-003",
-            "batch_id": "BATCH-003",
-            "details": {
-                "data": "isjfhdug"
-            },
-            "timestamp": "Sat Jun  7 18:17:37 2025"
-        },
-        "previous_hash": "505b8c259b5222eba81f51842ab82aa9c82eeeec8dfe2f241aa76a8329155f2b",
-        "hash": "549bd35c05341c5103100403f5ddee734b03f5b93f90599c4a94d58945ee10c9"
+        "previous_hash": "19f724342facea868282b54989005ec818138e15cb5d6b1b3c32edffd94e51e4",
+        "status": "denied",
+        "hash": "43f8802967aa2009f37853b04b93f62b99f6ba0beb4d68aa046a36215beb527b"
     }
 ]

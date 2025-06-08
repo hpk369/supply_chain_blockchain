@@ -45,21 +45,20 @@ def create_batch():
 
   payload = request.get_json() or {}
   batch_id = payload.get("batch_id","").strip()
-  details = payload.get("details", {})
-
   if not batch_id:
     abort(400, "batch_id is required")
+  if batch_id in BC.batch_index_map:
+    abort(400, "Batch ID already exists")
   
-  new_data = {
+  data = {
     "actor": current_user.id,
     "action": f"Created batch {batch_id}",
     "batch_id": batch_id,
-    "details": details,
+    "details": payload.get("details", {}),
     "timestamp": time.ctime()
   }
-  BC.add_block(new_data)
-
-  return jsonify({"message": "Batch Created", "block_index": BC.chain[-1].index}), 201
+  new_block = BC.add_block(data, status="confirmed")
+  return jsonify({"message": "Block created", "block_index": new_block.index}), 201
 
 @user_bp.route("/transfer", methods=["POST"])
 @login_required
@@ -69,24 +68,27 @@ def transfer_batch():
   Accept JSON: { "batch_id": str, "to": str }
   Adds a new block recording the transfer
   '''
-  # BC = Blockchain()
-
   payload = request.get_json() or {}
   batch_id = payload.get("batch_id", "").strip()
   to_actor = payload.get("to", "").strip()
-
   if not batch_id or not to_actor:
-    return abort(400, "batch_id and to (next actor) are required")
-  
-  new_data = {
-    "actor": current_user.id,
-    "action": f"Transferred batch {batch_id} to {to_actor}",
-    "batch_id": batch_id,
-    "time_stamp": time.ctime()
-  }
-  BC.add_block(new_data)
+    abort(400, "batch_id and to are required")
 
-  return jsonify({"message": "Batch transferred", "block_index": BC.chain[-1].index}), 201
+  # Ensure batch exists and actor matches current owner
+  if batch_id not in BC.batch_index_map:
+    abort(404, f"Batch {batch_id} not found")
+  current_index = BC.batch_index_map[batch_id]
+  owner = BC.chain[current_index].data.get("actor")
+  if current_user.id != owner:
+    abort(403, "Only the current owner can transfer this batch")
+
+  data = {
+    "actor": to_actor,
+    "action": f"Transferred batch {batch_id} to {to_actor}",
+    "batch_id": batch_id
+  }
+  new_block = BC.add_block(data, status="pending")
+  return jsonify({"message": "Transfer pending approval", "block_index": new_block.index}), 202
 
 @user_bp.route("/history/<string:batch_id>", methods=["GET"])
 @login_required
@@ -95,41 +97,32 @@ def batch_history(batch_id):
   '''
   Returns a combined timeline of block events and admin concerns for the given batch_id
   '''
-  # 1. Gather all blocks for this batch
-  block_events = []
-  for blk in BC.chain:
-    data = blk.data
-    if data.get("batch_id") == batch_id:
-      block_events.append({
-        "type": "block",
-        "index": blk.index,
-        "timestamp": blk.timestamp,
-        "data": data
-      })
-    if not block_events:
+  # Ensure batch exists
+  if batch_id not in BC.batch_index_map:
       return jsonify({"message": f"No history found for batch {batch_id}"}), 404
-    
-  # 2. Load concerns and filter those on our block indices
+
+  # Check ownership
+  current_index = BC.batch_index_map[batch_id]
+  owner = BC.chain[current_index].data.get("actor")
+  if current_user.id != owner:
+      abort(403, "You are not authorized to view this batch history")
+
+  # Scan entire chain for this batch_id
+  blocks = [
+      blk.to_dict()
+      for blk in BC.chain
+      if "batch_id" in blk.data and blk.data["batch_id"] == batch_id
+  ]
+
+  if not blocks:
+      return jsonify({"message": f"No history found for batch {batch_id}"}), 404
+
+  # Load concerns
+  from app.admin.routes import load_concerns
   concerns = load_concerns()
-  concern_events = []
-  batch_indices = {ev["index"] for ev in block_events}
-  for c in concerns:
-    idx = c.get("block_index")
-    if idx in batch_indices:
-      concern_events.append({
-        "type": "concern",
-        "block_index": idx,
-        "issue": c.get("issue"),
-        "raised_by": c.get("raised_by"),
-        "raised_at": c.get("raised_at")
-      })
+  batch_concerns = [c for c in concerns if c.get("batch_id") == batch_id]
 
-  # 3. Combine & sort by (index, then block before concern)
-  def sort_key(ev):
-    idx = ev["index"] if ev["type"] == "block" else ev["block_index"]
-    order = 0 if ev["type"] == "block" else 1
-    return (idx, order)
-  
-  timeline = sorted(block_events + concern_events, key=sort_key)
-
-  return jsonify(timeline), 200
+  return jsonify({
+      "blocks": blocks,
+      "concerns": batch_concerns
+  }), 200

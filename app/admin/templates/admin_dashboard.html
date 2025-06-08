@@ -29,6 +29,48 @@
 
      <hr />
 
+     <h2>Pending Transfers</h2>
+      {% if pending_transfers %}
+        <table>
+          <thread>
+            <tr>
+              <th>Block Index</th>
+              <th>Batch ID</th>
+              <th>Action</th>
+              <th>Actor</th>
+              <th>Timestamp</th>
+              <th>Approve</th>
+              <th>Deny</th>
+            </tr>
+          </thread>
+          <tbody>
+            {% for blk in pending_transfers %}
+            <tr>
+              <td>{{ blk.index }}</td>
+              <td>{{ blk.data.batch_id }}</td>
+              <td>{{ blk.data.action }}</td>
+              <td>{{ blk.data.actor }}</td>
+              <td>{{ blk.timestamp }}</td>
+              <td>
+                <form action="{{ url_for('admin.approve_transfer', block_index=blk.index) }}" method="POST" style="display:inline">
+                  <button type="submit">Approve</button>
+                </form>
+              </td>
+              <td>
+                <form action="{{ url_for('admin.deny_transfer', block_index=blk.index) }}" method="POST" style="display:inline">
+                  <button type="submit">Deny</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No Pending transfers</p>
+      {% endif %}
+
+     <hr />
+
      <h2>Exisiting Concerns</h2>
      {% if concerns %}
       <table>
@@ -88,6 +130,14 @@
 
       <button type="submit">Submit Concern</button>
     </form>
+
+    
+    <!-- <script>
+    // Auto-refresh every 5 seconds
+    setInterval(() => {
+        location.reload();
+    }, 5000);
+    </script> -->
     
   </body>
 </html>

@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, jsonify, request, abort
 from flask_login import login_required, current_user
 
 from ..utils import roles_required
-from blockchain.blockchain import Blockchain
+from blockchain import BC
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin", template_folder="templates")
 
@@ -14,7 +14,7 @@ LEDGER_PATH = Path("data/ledger.json")
 CONCERNS_PATH = Path("data/concerns.json")
 
 # Load or create global Blockchain instance
-BC = Blockchain()
+# BC = Blockchain()
 
 def load_concerns():
   # Load concerns.json if it exists, otherwise return an empty list
@@ -38,9 +38,12 @@ def admin_dashboard():
   - View full chain
   - View/raise/resolved concerns
   '''
-  print(f"DEBUG: {current_user.id}, role={current_user.role}")
+  # print(f"DEBUG: {current_user.id}, role={current_user.role}")
   concerns = load_concerns()
-  return render_template("admin_dashboard.html", username=current_user.id, concerns=concerns)
+  # Gather all pending transfers
+  pending_transfers = [blk for blk in BC.chain if blk.status == "pending"]
+  print(f"DEBUG: Found {len(pending_transfers)} pending transfers")
+  return render_template("admin_dashboard.html", username=current_user.id, concerns=concerns, pending_transfers=pending_transfers)
 
 @admin_bp.route("/chain", methods=["GET"])
 @login_required
@@ -53,6 +56,52 @@ def view_chain():
   except Exception:
     chain_data = []
   return jsonify(chain_data), 200
+
+@admin_bp.route("/approve_transfer/<int:block_index>", methods=["POST"])
+@login_required
+@roles_required("admin")
+def approve_transfer(block_index):
+  try:
+    blk = BC.chain[block_index]
+  except IndexError:
+    abort(404, "Block not found")
+  if blk.status != "pending":
+    abort(400, "Block is not pending approval")
+  blk.status = "confirmed"
+  blk.hash = blk.calculate_hash()
+  BC.save_chain()
+  return jsonify(blk.to_dict()), 200
+
+@admin_bp.route("/deny_transfer/<int:block_index>", methods=["POST"])
+@login_required
+@roles_required("admin")
+def deny_transfer(block_index):
+    try:
+        blk = BC.chain[block_index]
+    except IndexError:
+        abort(404, "Block not found")
+    if blk.status != "pending":
+        abort(400, "Block is not pending approval")
+
+    batch_id = blk.data.get("batch_id")
+    prev_index = block_index - 1
+    if batch_id and prev_index >= 0:
+        # Revert batch_index_map
+        BC.batch_index_map[batch_id] = prev_index
+        if batch_id in BC.batch_events_map:
+            BC.batch_events_map[batch_id].remove(block_index)
+
+        # Revert actor to previous owner
+        prev_owner = BC.chain[prev_index].data.get("actor")
+        blk.data["actor"] = prev_owner
+
+    # Mark block as denied
+    blk.status = "denied"
+    blk.hash = blk.calculate_hash()
+    BC.save_chain()
+
+    return jsonify(blk.to_dict()), 200
+
 
 @admin_bp.route("/concerns", methods=["GET"])
 @login_required

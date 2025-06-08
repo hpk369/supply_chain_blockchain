@@ -1,37 +1,20 @@
 [
     {
-        "id": 1749306832784,
-        "block_index": 0,
-        "issue": "Test issue on genesis",
-        "raised_by": "admin1",
-        "raised_at": "Sat Jun  7 10:33:52 2025",
-        "resolved": true,
-        "resolved_at": "Sat Jun  7 12:21:25 2025"
-    },
-    {
-        "id": 1749307849487,
-        "block_index": 0,
-        "issue": "Test issue on genesis",
-        "raised_by": "admin1",
-        "raised_at": "Sat Jun  7 10:50:49 2025",
-        "resolved": false
-    },
-    {
-        "id": 1749308360628,
-        "block_index": 0,
-        "issue": "Test issue on genesis",
-        "raised_by": "admin1",
-        "raised_at": "Sat Jun  7 10:59:20 2025",
-        "resolved": true,
-        "resolved_at": "Sat Jun  7 12:21:31 2025"
-    },
-    {
-        "id": 1749313278312,
+        "id": 1749397010781,
         "block_index": -1,
         "issue": "no transfer",
         "raised_by": "admin1",
-        "raised_at": "Sat Jun  7 12:21:18 2025",
+        "raised_at": "Sun Jun  8 11:36:50 2025",
         "resolved": true,
-        "resolved_at": "Sat Jun  7 12:21:40 2025"
+        "resolved_at": "Sun Jun  8 11:37:04 2025"
+    },
+    {
+        "id": 1749399556222,
+        "block_index": 5,
+        "issue": "check",
+        "raised_by": "admin1",
+        "raised_at": "Sun Jun  8 12:19:16 2025",
+        "resolved": true,
+        "resolved_at": "Sun Jun  8 12:19:38 2025"
     }
 ]

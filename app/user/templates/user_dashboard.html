@@ -83,84 +83,82 @@
       });
     }
 
-    function transferBatch() {
-      const batchId = document.getElementById("transfer_batch_id").value;
-      const toUser = document.getElementById("transfer_to").value;
-      fetch("{{ url_for('user.transfer_batch') }}", {
-        method: "POST",
-        credentials: "same-origin",
-        header: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          batch_id: batchId,
-          to: toUser 
-        })
-      })
-      .then(res => res.json().then(data => ({ status: res.status, body: data })))
-      .then(obj => {
-        responseDiv.textContent = JSON.stringify(obj, null, 2);
-      })
-      .catch(err => {
-        responseDiv.textContent = err;
-      });
-    }
 
-    async function viewHistory() {
-      // 1. Validate input
-      const batchId = document.getElementById("history_batch_id").value.trim();
-      if(!batchId) {
-        responseDiv.textContent = "Please enter a Batch ID.";
+    async function transferBatch() {
+      const batchId = document.getElementById("transfer_batch_id").value.trim();
+      const toUser = document.getElementById("transfer_to").value.trim();
+      const responseDiv = document.getElementById("response");  // define inside this function
+
+      if (!batchId || !toUser) {
+        responseDiv.textContent = "Please enter both Batch ID and To User.";
         return;
       }
 
-      // 2. Build URL
-      const baseUrl = "{{ url_for('user.batch_history', batch_id='') }}";
-      const url = baseUrl + encodeURIComponent(batchId);
-
       try {
-        // 3. Fetch combined events
-        const res = await fetch(url, {
-          method: "GET",
-          credentials: "same-origin"
+        const res = await fetch("{{ url_for('user.transfer_batch') }}", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ batch_id: batchId, to: toUser })
         });
-        if(!res.ok) {
-          // Try to extract API error message
-          let err = await res.json().catch(() => null);
-          throw new Error(err?.message ?? `Error ${res.status}`);
-        }
-        const events = await res.json();
-        // 4. Render timeline
-        if(!Array.isArray(events) || events.length === 0) {
-          responseDiv.textContent = `No history found for batch ${batchID}.`;
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          responseDiv.textContent = data.message || `Error ${res.status}`;
           return;
         }
-        // Sort by block index (for blocks) and by raised_at for concerns, but assuming backend interleaves them in correct order:
-        let html = `<h3>History for ${batchId}</h3><ul>`;
-        events.forEach(ev => {
-          if(ev.type == "block") {
-            // ev will have index, timestamp, data.actor, data.action
-            html += `
-              <li>
-                <strong>Block #${ev.index}</strong>:
-                ${ev.data.action} <em>by ${ev.data.actor}</em>
-                <small>at ${ev.timestamp}</small>
-              </li>`;
-          } else if (ev.type === "concern") {
-            // ev has block_index, issue, raised_by, raised_at
-            html += `
-              <li style="color:darkorange">
-                <strong>Concern on Block #${ev.block_index}</strong>:
-                ${ev.issue} <em>raised by ${ev.raised_by}</em>
-                <small>at ${ev.raised_at}</small>
-              </li>`;
-          }
-        });
-        html += '</ul>';
-        responseDiv.innerHTMl = html;
-      } catch(err) {
-        responseDiv.textContent = `Failed to fetch history: ${err.message}`;
+
+        responseDiv.textContent = `✅ Transfer request submitted (pending approval), Block #${data.block_index}`;
+      } catch (err) {
+        responseDiv.textContent = `Request failed: ${err}`;
       }
     }
-      
+
+
+
+    async function viewHistory() {
+      const batchId = document.getElementById("history_batch_id").value.trim();
+      const url = "{{ url_for('user.batch_history', batch_id='') }}" + encodeURIComponent(batchId);
+      const res = await fetch(url, { method: 'GET', credentials: 'same-origin' });
+      const div = document.getElementById("response");
+
+      // If not ok, handle message
+      if (!res.ok) {
+        try {
+          const data = await res.json();
+          div.textContent = data.message || `Error ${res.status}`;
+        } catch {
+          div.textContent = `Error ${res.status}`;
+        }
+        return;
+      }
+
+      // Parse blocks + concerns
+      const data = await res.json();
+      let html = `<h3>History for ${batchId}</h3><ul>`;
+
+      if (!data.blocks || data.blocks.length === 0) {
+        html += `<li>No history found for this batch.</li>`;
+      } else {
+        data.blocks.forEach(b => {
+          let statusLabel = '';
+          if (b.status === 'pending') statusLabel = 'Pending';
+          else if (b.status === 'denied') statusLabel = 'Denied';
+          html += `<li>Block #${b.index}${statusLabel}: ${b.data.action} by ${b.data.actor} at ${b.timestamp}</li>`;
+        });
+      }
+
+      if (data.concerns && data.concerns.length > 0) {
+        data.concerns.forEach(c => {
+          html += `<li style="color:darkorange">⚠ Concern: ${c.issue} (on block ${c.block_index}) by ${c.raised_by} at ${c.raised_at}</li>`;
+        });
+      }
+
+      html += '</ul>';
+      div.innerHTML = html;
+    }
+   
   </script>
 
 </body>

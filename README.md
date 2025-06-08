@@ -37,3 +37,12 @@ Phase: Adding admin panel, user panel and dummy_script
    4. View All Products You've Created:
       Endpoint: GET /user/my_batches
       Action: From the chain, return all blocks where block["data"]["actor"] == <username> AND action contains "batch"
+
+
+Revamp
+1. Add status in each block for transfer approval. Status has three values: "pending", "confirmed", or "denied"
+2. Only the rightful owner can initiate a transfer and view history of the batch
+3. Added Approve and Deny buttons for admin panel
+4. Once the transfer is Approved the actor also changes
+5. Simple "Pending -> Approve" flow as consensus
+6. In-memory map for fast lookups. History lookups become constant-time for the "current" owner. Transfer operations don't have to scan the ledger to find the block to update or to check existence
