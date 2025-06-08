@@ -66,16 +66,29 @@ def view_concerns():
 @login_required
 @roles_required("admin")
 def raise_concern():
-  # Admin posts a new concern. Expects JSON: { "block_index": int, "issue": str }
-  payload = request.get_json() or {}
-  block_index = payload.get("block_index")
-  issue = payload.get("issue", "").strip()
-
+  '''
+  Admin posts a new concern. Supports both JSON payloads and form submission.
+  Expects:
+    - JSON:   { "block_index": 5, "issue": "Timestamp mismatch" }
+    - Form:   block_index=5, issue=Tumestamp+mismatch
+  '''
+  # Try JSON first
+  data = request.get_json(silent=True) or {}
+  block_index = data.get("block_index")
+  issue = data.get("issue", "").strip()
+  # Fallback to form data if JSON not provided
+  if block_index is None or not issue:
+    try:
+      block_index = int(request.form.get("block_index", ""))
+    except (TypeError, ValueError):
+      block_index = None
+    issue = request.form.get("issue", "").strip()
+  # Validate inputs
   if block_index is None or issue == "":
-    return abort(400, "Must provide block_index and issue text")
-  
+    abort(400, "Must provide a valid block_index and non-empty issue")
+  # Build and persist the new concern
   new_concern = {
-    "id": int(time.time() * 1000),  # millisecond-precision unique ID
+    "id": int(time.time() * 1000),
     "block_index": block_index,
     "issue": issue,
     "raised_by": current_user.id,
@@ -87,11 +100,11 @@ def raise_concern():
   save_concerns(concerns)
   return jsonify(new_concern), 201
 
-@admin_bp.route("/concerns/<int:concern_id>", methods=["DELETE"])
+@admin_bp.route("/concerns/<int:concern_id>", methods=["POST","DELETE"])
 @login_required
 @roles_required("admin")
 def resolve_concern(concern_id):
-  # Mark a conern as resolved. Adds "resolved": TRUE and "resolved_at" timestamp
+  # Mark a concern as resolved. Adds "resolved": TRUE and "resolved_at" timestamp
   concerns = load_concerns()
   for c in concerns:
     if c["id"] == concern_id:

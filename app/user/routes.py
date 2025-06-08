@@ -5,6 +5,8 @@ from flask_login import login_required, current_user
 
 from ..utils import roles_required
 from blockchain.blockchain import Blockchain
+from blockchain import BC
+from app.admin.routes import load_concerns
 
 user_bp = Blueprint("user", __name__, url_prefix="/user", template_folder="templates")
 
@@ -37,7 +39,7 @@ def create_batch():
     }
   '''
 
-  BC = Blockchain()
+  # BC = Blockchain()
   # bc.add_block(new_data)
   # return jsonify({ "block_index": bc.chain[-1].index }), 201
 
@@ -67,7 +69,7 @@ def transfer_batch():
   Accept JSON: { "batch_id": str, "to": str }
   Adds a new block recording the transfer
   '''
-  BC = Blockchain()
+  # BC = Blockchain()
 
   payload = request.get_json() or {}
   batch_id = payload.get("batch_id", "").strip()
@@ -91,15 +93,43 @@ def transfer_batch():
 @roles_required("user")
 def batch_history(batch_id):
   '''
-  Returns the histiry (all blocks) for a given batch_id
+  Returns a combined timeline of block events and admin concerns for the given batch_id
   '''
-  BC = Blockchain()
-  history = [
-    blk.to_dict()
-    for blk in BC.chain
-    if blk.data.get("batch_id") == batch_id
-  ]
-  print("DEBUG CHAIN DATA:", [blk.data for blk in BC.chain])
-  if not history:
-    return jsonify({"message": f"No history foudn for batch {batch_id}"}), 404
-  return jsonify(history), 200
+  # 1. Gather all blocks for this batch
+  block_events = []
+  for blk in BC.chain:
+    data = blk.data
+    if data.get("batch_id") == batch_id:
+      block_events.append({
+        "type": "block",
+        "index": blk.index,
+        "timestamp": blk.timestamp,
+        "data": data
+      })
+    if not block_events:
+      return jsonify({"message": f"No history found for batch {batch_id}"}), 404
+    
+  # 2. Load concerns and filter those on our block indices
+  concerns = load_concerns()
+  concern_events = []
+  batch_indices = {ev["index"] for ev in block_events}
+  for c in concerns:
+    idx = c.get("block_index")
+    if idx in batch_indices:
+      concern_events.append({
+        "type": "concern",
+        "block_index": idx,
+        "issue": c.get("issue"),
+        "raised_by": c.get("raised_by"),
+        "raised_at": c.get("raised_at")
+      })
+
+  # 3. Combine & sort by (index, then block before concern)
+  def sort_key(ev):
+    idx = ev["index"] if ev["type"] == "block" else ev["block_index"]
+    order = 0 if ev["type"] == "block" else 1
+    return (idx, order)
+  
+  timeline = sorted(block_events + concern_events, key=sort_key)
+
+  return jsonify(timeline), 200
