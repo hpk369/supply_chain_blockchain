@@ -1,0 +1,8 @@
+services:
+  supply_chain_tracker:
+    build: .
+    ports:
+      - "9567:9567"  # host:container
+    volumes:
+      - ./data:/app/data  # persist blockchain data
+    restart: always
