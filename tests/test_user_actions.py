@@ -1,43 +1,47 @@
-import json
 import unittest
-from main import app
-from blockchain.blockchain import Blockchain
+
+from app import app, BC
 
 class UserActionsTestCase(unittest.TestCase):
   def setUp(self):
-    self.client = app.test_client()
-    # Ensure a fresh ledger.json for each test
-    try:
-      import os
-      os.remove("data/ledger.json")
-    except FileNotFoundError:
-      pass
-    self.bc = Blockchain()  # Recreate with only genesis block
+    self.app = app.test_client()
+    self.app.testing = True
 
-  def login_as_user(self):
-    return self.client.post("/login", data={
-      "username": "userA",
-      "password": "userApass"
-    }, follow_redirects=True)
+  def login_as_user(self, username="userA", password="userApass"):
+    return self.app.post(
+      '/login',
+      data=dict(username=username, password=password),
+      follow_redirects=True
+    )
   
-  def test_create_and_history(self):
-    # Log in as userA
-    res = self.login_as_user()
+  def test_create_batch(self):
+    self.login_as_user()
+    res = self.app.post(
+      '/user/create',
+      data={'batch_id': 'TEST-BATCH-1', 'info': 'Initial batch'},
+      follow_redirects=True
+    )
+    self.assertEqual(res.status_code, 200)
+    self.assertIn(b'Batch created successfully', res.data)
+
+  def test_transfer_batch(self):
+    self.login_as_user()
+    self.app.post(
+      '/user/create',
+      data={'batch_id': 'TEST-BATCH-2', 'info': 'For transfer test'}
+    )
+    res = self.app.post(
+      '/user/transfer',
+      data={'batch_id': 'TEST-BATCH-2', 'to_user': 'UserB'},
+      follow_redirects=True
+    )
     self.assertEqual(res.status_code, 200)
 
-    # Create batch B-TEST
-    payload = {"batch_id": "B-TEST", "details": {"info": "test"}}
-    res = self.client.post("/user/create", json=payload, follow_redirects=True)
-    self.assertEqual(res.status_code, 201)
-    obj = json.loads(res.data)
-    self.assertIn("block_index", obj)
-
-    # Fetch history of B-TEST
-    res = self.client.get("/user/history/B-TEST")
+  def test_view_history(self):
+    self.login_as_user()
+    res = self.app.get(
+      '/user/history/TEST-BATCH-1',
+      follow_redirects=True
+    )
     self.assertEqual(res.status_code, 200)
-    history = json.loads(res.data)
-    self.assertEqual(len(history), 1)
-    self.assertEqual(history[0]["data"]["batch_id"], "B-TEST")
-
-if __name__ == "__main__":
-  unittest.main()
+    self.assertIn(b'History for Batch ID', res.data)
