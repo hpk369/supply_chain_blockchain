@@ -172,5 +172,60 @@
         "previous_hash": "19f724342facea868282b54989005ec818138e15cb5d6b1b3c32edffd94e51e4",
         "status": "denied",
         "hash": "43f8802967aa2009f37853b04b93f62b99f6ba0beb4d68aa046a36215beb527b"
+    },
+    {
+        "index": 13,
+        "timestamp": "Mon Jun  9 09:35:55 2025",
+        "data": {
+            "actor": "UserB",
+            "action": "Transferred batch BATCH-004 to UserB",
+            "batch_id": "BATCH-004",
+            "transfer_status": "denied",
+            "original_actor": "UserB"
+        },
+        "previous_hash": "43f8802967aa2009f37853b04b93f62b99f6ba0beb4d68aa046a36215beb527b",
+        "status": "denied",
+        "hash": "4a8bfa8b580d9d87ff2d04923dba975f6779dbaae6f49a154bdaae23abab08b8"
+    },
+    {
+        "index": 14,
+        "timestamp": "Mon Jun  9 09:57:15 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Created batch BATCH-10",
+            "batch_id": "BATCH-10",
+            "details": {
+                "try": "trial"
+            },
+            "timestamp": "Mon Jun  9 09:57:15 2025"
+        },
+        "previous_hash": "4a8bfa8b580d9d87ff2d04923dba975f6779dbaae6f49a154bdaae23abab08b8",
+        "status": "confirmed",
+        "hash": "48013f7922b47455188e099d80daad500b9b32a567fe213ada7aa0b60b95f340"
+    },
+    {
+        "index": 15,
+        "timestamp": "Mon Jun  9 09:57:43 2025",
+        "data": {
+            "actor": "UserB",
+            "previous_owner": "userA",
+            "action": "Transfer requested from userA to UserB",
+            "batch_id": "BATCH-10"
+        },
+        "previous_hash": "48013f7922b47455188e099d80daad500b9b32a567fe213ada7aa0b60b95f340",
+        "status": "denied",
+        "hash": "3e991fe54c9c152457a15570f0d7e0edf37c1ab9023292fb81b9ef2a66126c90"
+    },
+    {
+        "index": 16,
+        "timestamp": "Mon Jun  9 09:58:41 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Transfer denied - ownership reverted to userA",
+            "batch_id": "BATCH-10"
+        },
+        "previous_hash": "3e991fe54c9c152457a15570f0d7e0edf37c1ab9023292fb81b9ef2a66126c90",
+        "status": "confirmed",
+        "hash": "9f8b818f450b51896f732f99c2ef95fc8bcbdaa47e6a05c754d0a1c12a3cb0e9"
     }
 ]

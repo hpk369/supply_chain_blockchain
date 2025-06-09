@@ -83,7 +83,6 @@
       });
     }
 
-
     async function transferBatch() {
       const batchId = document.getElementById("transfer_batch_id").value.trim();
       const toUser = document.getElementById("transfer_to").value.trim();
@@ -115,26 +114,24 @@
       }
     }
 
-
-
     async function viewHistory() {
       const batchId = document.getElementById("history_batch_id").value.trim();
       const url = "{{ url_for('user.batch_history', batch_id='') }}" + encodeURIComponent(batchId);
       const res = await fetch(url, { method: 'GET', credentials: 'same-origin' });
-      const div = document.getElementById("response");
+      const responseDiv = document.getElementById("response");
 
-      // If not ok, handle message
+      // Handle errors
       if (!res.ok) {
         try {
           const data = await res.json();
-          div.textContent = data.message || `Error ${res.status}`;
+          responseDiv.textContent = data.message || `Error ${res.status}`;
         } catch {
-          div.textContent = `Error ${res.status}`;
+          responseDiv.textContent = `Error ${res.status}`;
         }
         return;
       }
 
-      // Parse blocks + concerns
+      // Parse data
       const data = await res.json();
       let html = `<h3>History for ${batchId}</h3><ul>`;
 
@@ -143,12 +140,35 @@
       } else {
         data.blocks.forEach(b => {
           let statusLabel = '';
-          if (b.status === 'pending') statusLabel = 'Pending';
-          else if (b.status === 'denied') statusLabel = 'Denied';
-          html += `<li>Block #${b.index}${statusLabel}: ${b.data.action} by ${b.data.actor} at ${b.timestamp}</li>`;
+          let actionLine = '';
+
+          if (b.status === 'pending') {
+            statusLabel = 'Pending';
+            const prevOwner = b.data.previous_owner || 'unknown';
+            actionLine = `${b.data.action} (Previous owner: ${prevOwner})`;
+          }
+          else if (b.status === 'denied') {
+            statusLabel = 'Denied';
+            const prevOwner = b.data.previous_owner || 'unknown';
+            actionLine = `${b.data.action} (Previous owner: ${prevOwner})`;
+          }
+          else if (b.status === 'confirmed') {
+            // Special case for "revert" block after denied:
+            if (b.data.action && b.data.action.startsWith("Transfer denied - ownership reverted")) {
+              statusLabel = 'Revert';
+            }
+            actionLine = `${b.data.action} by ${b.data.actor}`;
+          }
+          else {
+            // fallback for unknown status
+            actionLine = `${b.data.action} by ${b.data.actor}`;
+          }
+
+          html += `<li>Block #${b.index}${statusLabel}: ${actionLine} at ${b.timestamp}</li>`;
         });
       }
 
+      // Show concerns if any
       if (data.concerns && data.concerns.length > 0) {
         data.concerns.forEach(c => {
           html += `<li style="color:darkorange">⚠ Concern: ${c.issue} (on block ${c.block_index}) by ${c.raised_by} at ${c.raised_at}</li>`;
@@ -156,7 +176,7 @@
       }
 
       html += '</ul>';
-      div.innerHTML = html;
+      responseDiv.innerHTML = html;
     }
    
   </script>

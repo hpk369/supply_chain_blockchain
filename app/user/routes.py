@@ -68,26 +68,36 @@ def transfer_batch():
   Accept JSON: { "batch_id": str, "to": str }
   Adds a new block recording the transfer
   '''
-  payload = request.get_json() or {}
-  batch_id = payload.get("batch_id", "").strip()
-  to_actor = payload.get("to", "").strip()
-  if not batch_id or not to_actor:
-    abort(400, "batch_id and to are required")
+  payload = request.get_json(silent=True) or {}
+  batch_id = payload.get("batch_id") or request.form.get("batch_id", "").strip()
+  to_actor = payload.get("to") or request.form.get("to", "").strip()
 
-  # Ensure batch exists and actor matches current owner
+  if not batch_id or not to_actor:
+      abort(400, "batch_id and to are required")
+
+  # Ensure batch exists
   if batch_id not in BC.batch_index_map:
-    abort(404, f"Batch {batch_id} not found")
+      abort(404, f"Batch {batch_id} not found")
+
   current_index = BC.batch_index_map[batch_id]
   owner = BC.chain[current_index].data.get("actor")
   if current_user.id != owner:
-    abort(403, "Only the current owner can transfer this batch")
+      abort(403, "Only the current owner can transfer this batch")
 
+  # Validate target actor
+  from app.models import USERS
+  if to_actor not in USERS:
+      abort(400, f"Target actor '{to_actor}' is not a valid user")
+
+  # Create pending transfer block with previous_owner recorded
   data = {
-    "actor": to_actor,
-    "action": f"Transferred batch {batch_id} to {to_actor}",
-    "batch_id": batch_id
+      "actor": to_actor,
+      "previous_owner": current_user.id,
+      "action": f"Transfer requested from {current_user.id} to {to_actor}",
+      "batch_id": batch_id
   }
   new_block = BC.add_block(data, status="pending")
+
   return jsonify({"message": "Transfer pending approval", "block_index": new_block.index}), 202
 
 @user_bp.route("/history/<string:batch_id>", methods=["GET"])

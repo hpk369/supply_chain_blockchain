@@ -76,31 +76,34 @@ def approve_transfer(block_index):
 @login_required
 @roles_required("admin")
 def deny_transfer(block_index):
-    try:
-        blk = BC.chain[block_index]
-    except IndexError:
-        abort(404, "Block not found")
-    if blk.status != "pending":
-        abort(400, "Block is not pending approval")
+  try:
+      blk = BC.chain[block_index]
+  except IndexError:
+      abort(404, "Block not found")
+  if blk.status != "pending":
+      abort(400, "Block is not pending approval")
 
-    batch_id = blk.data.get("batch_id")
-    prev_index = block_index - 1
-    if batch_id and prev_index >= 0:
-        # Revert batch_index_map
-        BC.batch_index_map[batch_id] = prev_index
-        if batch_id in BC.batch_events_map:
-            BC.batch_events_map[batch_id].remove(block_index)
+  batch_id = blk.data.get("batch_id")
+  previous_owner = blk.data.get("previous_owner")
 
-        # Revert actor to previous owner
-        prev_owner = BC.chain[prev_index].data.get("actor")
-        blk.data["actor"] = prev_owner
+  # Mark block as denied (do NOT mutate actor)
+  blk.status = "denied"
+  blk.hash = blk.calculate_hash()
 
-    # Mark block as denied
-    blk.status = "denied"
-    blk.hash = blk.calculate_hash()
-    BC.save_chain()
+  # Append new block reverting ownership
+  revert_data = {
+      "actor": previous_owner,
+      "action": f"Transfer denied - ownership reverted to {previous_owner}",
+      "batch_id": batch_id
+  }
+  revert_block = BC.add_block(revert_data, status="confirmed")
 
-    return jsonify(blk.to_dict()), 200
+  BC.save_chain()
+
+  return jsonify({
+      "denied_block": blk.to_dict(),
+      "revert_block": revert_block.to_dict()
+  }), 200
 
 
 @admin_bp.route("/concerns", methods=["GET"])
