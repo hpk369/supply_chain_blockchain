@@ -24,5 +24,130 @@
         "previous_hash": "67ecbb02316331aca9cc9698d8aa65376144cf1869d629aa0b9dcca6a570390b",
         "status": "confirmed",
         "hash": "137d727989e360c40850a0a61fa028177c3405d0f2367f378c5366ece69e7b11"
+    },
+    {
+        "index": 2,
+        "timestamp": "Tue Jun 17 09:29:49 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Created batch BATCH-001",
+            "batch_id": "BATCH-001",
+            "details": {
+                "entry1": "Hi how are you"
+            },
+            "timestamp": "Tue Jun 17 09:29:49 2025"
+        },
+        "previous_hash": "137d727989e360c40850a0a61fa028177c3405d0f2367f378c5366ece69e7b11",
+        "status": "confirmed",
+        "hash": "f3d155bac2132b98c7da34a17f3df71ba5fe19edc9b1c98b1c59054964000dc1"
+    },
+    {
+        "index": 3,
+        "timestamp": "Tue Jun 17 09:30:33 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Created batch BATCH-004",
+            "batch_id": "BATCH-004",
+            "details": {
+                "material": "silk"
+            },
+            "timestamp": "Tue Jun 17 09:30:33 2025"
+        },
+        "previous_hash": "f3d155bac2132b98c7da34a17f3df71ba5fe19edc9b1c98b1c59054964000dc1",
+        "status": "confirmed",
+        "hash": "c19ef956229085a595a46f8ffd18d8fb26f80fcf8558ba09a95afc4f87310ec5"
+    },
+    {
+        "index": 4,
+        "timestamp": "Tue Jun 17 09:30:55 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Created batch BATCH-003",
+            "batch_id": "BATCH-003",
+            "details": {
+                "manufacturer": "H&M"
+            },
+            "timestamp": "Tue Jun 17 09:30:55 2025"
+        },
+        "previous_hash": "c19ef956229085a595a46f8ffd18d8fb26f80fcf8558ba09a95afc4f87310ec5",
+        "status": "confirmed",
+        "hash": "904f3d1acc241e07c827b1e85cb6f18b99a2cc28a001885af24e26c263e90667"
+    },
+    {
+        "index": 5,
+        "timestamp": "Tue Jun 17 09:31:32 2025",
+        "data": {
+            "actor": "UserB",
+            "action": "Created batch BATCH-005",
+            "batch_id": "BATCH-005",
+            "details": {
+                "Food": "burger"
+            },
+            "timestamp": "Tue Jun 17 09:31:32 2025"
+        },
+        "previous_hash": "904f3d1acc241e07c827b1e85cb6f18b99a2cc28a001885af24e26c263e90667",
+        "status": "confirmed",
+        "hash": "ba79cae7fda7199286a4a429ca24e7b289a783c09bb350bcaabba9d8abedb517"
+    },
+    {
+        "index": 6,
+        "timestamp": "Tue Jun 17 09:31:50 2025",
+        "data": {
+            "actor": "UserB",
+            "action": "Created batch BATCH-006",
+            "batch_id": "BATCH-006",
+            "details": {
+                "House owner": "abc"
+            },
+            "timestamp": "Tue Jun 17 09:31:50 2025"
+        },
+        "previous_hash": "ba79cae7fda7199286a4a429ca24e7b289a783c09bb350bcaabba9d8abedb517",
+        "status": "confirmed",
+        "hash": "a07ba7b70af8d99828cba3c84ffff3ad8d5bca706db77d5775f8e43ccd5727dd"
+    },
+    {
+        "index": 7,
+        "timestamp": "Tue Jun 17 09:32:17 2025",
+        "data": {
+            "actor": "UserB",
+            "action": "Created batch BATCH-007",
+            "batch_id": "BATCH-007",
+            "details": {
+                "Destination": "Goa"
+            },
+            "timestamp": "Tue Jun 17 09:32:17 2025"
+        },
+        "previous_hash": "a07ba7b70af8d99828cba3c84ffff3ad8d5bca706db77d5775f8e43ccd5727dd",
+        "status": "confirmed",
+        "hash": "06c90364fb13ee076f9ab04500c49f0d10fab5a78f4c0fb6a5d269d7066cd3df"
+    },
+    {
+        "index": 8,
+        "timestamp": "Tue Jun 17 09:35:14 2025",
+        "data": {
+            "actor": "userA",
+            "action": "Created batch BATCH-008",
+            "batch_id": "BATCH-008",
+            "details": {
+                "demo": "test"
+            },
+            "timestamp": "Tue Jun 17 09:35:14 2025"
+        },
+        "previous_hash": "06c90364fb13ee076f9ab04500c49f0d10fab5a78f4c0fb6a5d269d7066cd3df",
+        "status": "confirmed",
+        "hash": "692de9ba290ef12874392c602f6348f36b81f9949627e1c544583582ce77f04b"
+    },
+    {
+        "index": 9,
+        "timestamp": "Tue Jun 17 09:35:33 2025",
+        "data": {
+            "actor": "UserB",
+            "previous_owner": "userA",
+            "action": "Transfer requested from userA to UserB",
+            "batch_id": "BATCH-001"
+        },
+        "previous_hash": "692de9ba290ef12874392c602f6348f36b81f9949627e1c544583582ce77f04b",
+        "status": "confirmed",
+        "hash": "9ce59fb8fb1a6ae26c2610222485395f851e6f14bcc0d2359f01bea9ba3fb2e8"
     }
 ]

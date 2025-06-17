@@ -1,45 +1,120 @@
-# Blockchain-based Supply Chain Tracker Web Application
+# Blockchain-based Supply Chain Tracker
 
-A lightweight **Blockchain-powered Supply Chain Tracker Web App** built using Python and Flask.
-
-Tracks **batch ownership**, **transfers**, **concerns**, and maintains an **immutable append-only ledger** with full auditability and role-based access control.
+A full-stack web application that leverages blockchain principles to track, transfer, and verify supply chain batch records with **admin approval**, **tamper-proof history**, and **role-based access**.
 
 ---
 
 ## Features
 
--> Create and manage supply chain batches  
--> User-initiated **transfer requests** with **Admin approval/denial flow**  
--> Admin can **raise concerns** on any batch  
--> Full **batch history view** — immutable ledger of all actions  
--> **Ownership validation** — only current owner can transfer/view  
--> Blockchain **integrity validation** — detects tampering  
--> Role-based access — User & Admin dashboards  
--> **Dockerized deployment** — ready for demo or production  
--> Comprehensive **unit tests** for blockchain, user, and admin actions
+- Immutable ledger using blockchain data structures
+- User-initiated batch transfers with admin approval workflow
+- View detailed batch history: created, transferred, flagged
+- Raise and manage concerns as an admin
+- Flask-Login authentication for User/Admin roles
+- Tested with unit tests for blockchain logic and user workflows
+- Dockerized for easy deployment
 
 ---
 
-## Technologies Used
+## Tech Stack
 
-- **Python 3.11**
-- **Flask** + Flask-Login
-- Custom **Blockchain** implementation (Block + Blockchain classes)
-- HTML / CSS / JS (Jinja templates)
-- **Docker**, Docker Compose
-- **Python unittest** for testing
+- **Python 3.11**, **Flask**, **Flask-Login**
+- **HTML**, **CSS**, **Vanilla JS**
+- **Docker**, **Docker Compose**
+- **Jinja2 Templates**
+- **Python unittest**
 
 ---
 
 ## Project Structure
 
-```plaintext
-├── app/                # Flask app (auth, utils, user/admin routes)
-├── blockchain/         # Blockchain and Block classes
-├── data/               # Ledger and Concerns (persisted)
-├── tests/              # Test files for Blockchain, User, Admin
-├── requirements.txt    # Python dependencies
-├── Dockerfile          # Build container image
-├── docker-compose.yml  # Run with Docker
-├── main.py             # Flask app entrypoint
-└── README.md           # This file
+```bash
+supply_chain_blockchain/
+├── app/
+│   ├── admin/
+│   ├── user/
+│   ├── templates/
+│   ├── static/
+│   ├── utils.py
+│   └── auth.py
+├── blockchain/
+│   ├── block.py
+│   └── blockchain.py
+├── data/
+│   ├── ledger.json
+│   └── concerns.json
+├── tests/
+│   ├── test_blockchain.py
+│   ├── test_user_actions.py
+│   └── test_admin_actions.py
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+└── main.py
+```
+
+---
+
+## Getting Started
+
+### Run Locally
+
+1. **Clone the repo**
+
+```bash
+git clone https://github.com/hpk369/supply_chain_blockchain.git
+cd supply_chain_blockchain
+```
+
+2. **Install dependencies**
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+3. **Run the app**
+
+```bash
+python main.py
+```
+
+Open your browser at [http://127.0.0.1:9567](http://127.0.0.1:9567)
+
+---
+
+### Run with Docker
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+---
+
+## Running Tests
+
+```bash
+python -m unittest discover tests
+```
+
+---
+
+## How it Works
+
+1. **User** creates a new batch
+2. **User** initiates a transfer → saved as a **pending block**
+3. **Admin** can approve/deny the transfer from dashboard
+4. All actions are recorded in **ledger.json** with full traceability
+5. **Concerns** can be raised by Admin and viewed in history
+
+---
+
+## Use Case
+
+This app is ideal for demonstrating:
+- Understanding of blockchain principles
+- Role-based authorization and state handling
+- Clean architecture and secure web design
+- Real-world logistics and auditing simulation
